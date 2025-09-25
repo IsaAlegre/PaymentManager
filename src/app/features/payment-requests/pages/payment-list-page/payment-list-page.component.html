@@ -1,0 +1,36 @@
+<main class="flex flex-col min-h-screen w-full">
+  <!-- Cabecera de la página con título y botón -->
+  <header class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Solicitudes de Pago</h2>
+    <button 
+      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300">
+      Crear Solicitud
+    </button>
+  </header>
+
+   <app-payment-loader *ngIf="isLoading()"></app-payment-loader>
+
+    <div *ngIf="error()" class="bg-red-50 border border-red-200 rounded-lg p-6">
+      <p class="text-red-700">{{ error() }}</p>
+    </div>
+
+      <!-- Lista de pagos -->
+    <app-payment-list
+      *ngIf="!isLoading() && !error()"
+      [payments]="pagos()"> 
+    </app-payment-list>
+
+   <!-- Mensaje cuando no hay pagos  -->
+    <div *ngIf="!isLoading() && !error() && pagos().length === 0"  
+          class="flex items-center justify-center h-96 text-gray-500">
+      <p>No hay solicitudes de pago</p>
+    </div>
+
+      <app-pagination
+        [currentPage]="currentPage()"
+        [totalItems]="totalElements()" 
+        [itemsPerPage]="itemsPerPage()"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
+</main>
+
