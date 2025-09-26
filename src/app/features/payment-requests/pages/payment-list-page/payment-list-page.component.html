@@ -2,10 +2,18 @@
   <!-- Cabecera de la página con título y botón -->
   <header class="flex items-center justify-between mb-6">
     <h2 class="text-2xl font-bold text-gray-800">Solicitudes de Pago</h2>
-    <button 
-      class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300">
-      Crear Solicitud
-    </button>
+    <div class="flex gap-4 items-center">
+      <!-- Buscador con iconos -->
+        <app-search-box
+        (search)="onSearchById($event)"
+        (cleared)="onRefresh()"
+        ></app-search-box>
+      <!-- Botón crear -->
+      <button
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300">
+        Crear Solicitud
+      </button>
+    </div>
   </header>
 
 
