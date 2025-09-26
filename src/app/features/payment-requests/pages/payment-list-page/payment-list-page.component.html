@@ -8,10 +8,15 @@
     </button>
   </header>
 
+
    <app-payment-loader *ngIf="isLoading()"></app-payment-loader>
 
     <div *ngIf="error()" class="bg-red-50 border border-red-200 rounded-lg p-6">
       <p class="text-red-700">{{ error() }}</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
 
       <!-- Lista de pagos -->
@@ -23,7 +28,7 @@
    <!-- Mensaje cuando no hay pagos  -->
     <div *ngIf="!isLoading() && !error() && pagos().length === 0"  
           class="flex items-center justify-center h-96 text-gray-500">
-      <p>No hay solicitudes de pago</p>
+      <p>No se encontraron resultados</p>
     </div>
 
       <app-pagination
@@ -32,5 +37,5 @@
         [itemsPerPage]="itemsPerPage()"
         (pageChange)="onPageChange($event)">
       </app-pagination>
-</main>
+
 
