@@ -1,48 +1,50 @@
-<table class="w-full table-auto border-collapse">
-  <thead class="bg-blue-300">
-    <tr class="border-b border-gray-200">
-      <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-700">ID</th>
-      <th scope="col" class="w-auto py-3 px-4 text-center text-sm font-medium text-gray-700">Descripción</th>
-      <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-700">Importe</th>
-      <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-700">Fecha Creación</th>
-      <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-700">Estado</th>
-      <th scope="col" class="py-3 px-4 text-center text-sm font-medium text-gray-700">Acciones</th>
-    </tr>
-  </thead>
-  <tbody class="divide-y divide-gray-200 bg-white"> 
-    <tr
-      *ngFor="let payment of payments"
-      class="hover:bg-gray-50 cursor-pointer"
-    >
-      <td class="px-4 py-3 text-center text-sm font-semibold text-gray-800">
-        {{ payment.id_sp }}
-      </td>
+<div class="overflow-x-auto rounded-lg shadow">
+  <table class="w-full">
+    <thead class="bg-blue-300">
+      <tr class="border-b border-gray-200">
+        <th scope="col" class="w-20 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">ID</th>
+        <th scope="col" class="w-32 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Descripción</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Importe</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Fecha Creación</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Estado</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white"> 
+      <tr
+        *ngFor="let payment of payments"
+        class="hover:bg-gray-50 cursor-pointer"
+      >
+        <td class="p-3  text-sm font-semibold text-gray-800 whitespace-nowrap">
+          {{ payment.id_sp }}
+        </td>
 
-      <td class="w-auto text-sm text-center font-semibold text-gray-800 truncate" [title]="payment.descripcion">
-          {{ payment.descripcion }}
-      </td>
+        <td class="p-3 text-sm font-semibold text-gray-800 truncate whitespace-nowrap" [title]="payment.descripcion">
+            {{ payment.descripcion }}
+        </td>
 
-      <td class="px-4 py-3 text-sm text-center font-semibold text-gray-800">
-        {{ payment.importe_pagado | currency:'USD':'symbol':'1.2-2' }}
-      </td>
-      
-      <td class="px-4 py-3 text-sm text-center text-gray-500">
-        {{ payment.fecha_creacion | date:'dd/MM/yyyy' }}
-      </td>
-      
-      <td class="px-4 py-3 text-sm text-center">
-        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" [class]="payment.estado_pago | paymentStatus:'class'">
-          {{ payment.estado_pago | paymentStatus:'text' }}
-        </span>
-      </td>
+        <td class="p-3 text-sm font-semibold text-gray-800 whitespace-nowrap">
+          {{ payment.importe_pagado | currency:'USD':'symbol':'1.2-2' }}
+        </td>
+        
+        <td class="p-3 text-sm  text-gray-500 whitespace-nowrap">
+          {{ payment.fecha_creacion | date:'dd/MM/yyyy' }}
+        </td>
+        
+        <td class="p-3 text-sm whitespace-nowrap">
+          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" [class]="payment.estado_pago | paymentStatus:'class'">
+            {{ payment.estado_pago | paymentStatus:'text' }}
+          </span>
+        </td>
 
-      <td class="px-4 py-3 text-center text-sm">
-        <button 
-          (click)="onPaymentDetail(payment, $event)" 
-          class="text-blue-600 hover:text-blue-800 font-medium">
-          Ver Detalles
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        <td class="p-3 text-sm whitespace-nowrap">
+          <button 
+            (click)="onPaymentDetail(payment, $event)" 
+            class="text-blue-600 hover:text-blue-800 font-medium">
+            Ver Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

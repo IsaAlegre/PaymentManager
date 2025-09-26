@@ -88,7 +88,7 @@ export class PaymentListPageComponent {
     this.isLoading.set(true);
     this.error.set(null);
     this.errorMessage = null;
-    const pageNumber = this._currentPage();
+    const pageNumber = this._currentPage() - 1;
 
     this.paymentService
       .getPaymentRequests(pageNumber, this.itemsPerPage())
