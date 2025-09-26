@@ -1,59 +1,116 @@
 # PaymentManager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.2.
+PaymentManager es una aplicación web desarrollada con Angular que permite gestionar pagos de manera eficiente y sencilla. El proyecto está diseñado para facilitar el registro, seguimiento y administración de pagos en distintos contextos, como empresas, organizaciones o proyectos personales.
 
-## Development server
+## Características principales
 
-To start a local development server, run:
+- Registro y edición de pagos.
+- Visualización de historial de pagos.
+- Filtros y búsqueda avanzada.
+- Interfaz intuitiva y responsiva.
+
+## Estructura del proyecto
+
+El proyecto sigue una arquitectura modular de Angular:
+
+- `src/app/core`: servicios globales y configuración.
+- `src/app/features`: funcionalidades principales (ej. `payment-requests`).
+- `src/app/shared`: componentes, directivas y pipes reutilizables.
+- `src/environments`: configuración de entornos (`dev`, `prod`, `secret`).
+
+Esta organización facilita la escalabilidad y el mantenimiento del proyecto.
+
+## Tecnologías utilizadas
+
+- [Angular CLI](https://github.com/angular/angular-cli) v20.3.2
+- TypeScript
+- HTML5 & CSS3
+- RxJS
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/PaymentManager.git
+   cd PaymentManager
+   ```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+## Configuración de entorno
+
+**Es necesario crear el archivo `src/environments/environment.secret.ts`** con el siguiente contenido, donde debes colocar la URL de la API y el token de autenticación:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://TU_API_URL',
+  apiToken: 'TU_API_TOKEN',
+};
+```
+
+Este archivo es requerido para que la aplicación pueda conectarse correctamente al backend.
+
+## Servidor de desarrollo
+
+Para iniciar el servidor de desarrollo local, ejecuta:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Luego abre tu navegador en `http://localhost:4200/`. La aplicación se recargará automáticamente al modificar los archivos fuente.
 
-## Code scaffolding
+## Generación de código
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Angular CLI incluye herramientas para generar código automáticamente. Por ejemplo, para crear un nuevo componente:
 
 ```bash
-ng generate component component-name
+ng generate component nombre-componente
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Para ver todos los esquemas disponibles:
 
 ```bash
 ng generate --help
 ```
 
-## Building
+## Compilación
 
-To build the project run:
+Para compilar el proyecto:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los archivos compilados se almacenarán en el directorio `dist/`.
 
-## Running unit tests
+## Pruebas unitarias
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Para ejecutar las pruebas unitarias con [Karma](https://karma-runner.github.io):
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Pruebas end-to-end
 
-For end-to-end (e2e) testing, run:
+Para pruebas end-to-end (e2e):
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Angular CLI no incluye un framework e2e por defecto, puedes elegir el que prefieras.
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Recursos adicionales
+
+- [Documentación oficial de Angular](https://angular.dev/docs)
+- [Referencia de comandos Angular CLI](https://angular.dev/tools/cli)
+- [Guía de estilo Angular](https://angular.dev/guide/styleguide)
+
+---
