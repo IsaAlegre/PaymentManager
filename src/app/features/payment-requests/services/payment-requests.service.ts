@@ -34,19 +34,15 @@ export class PaymentRequestsService {
     );
   }
 
-   getPaymentRequestById(id: number): Observable<PaymentRequest | undefined> {
-    // Usamos HttpParams para añadir el parámetro 'id' a la URL de forma segura.
+  getPaymentRequestById(id: number): Observable<PaymentRequest | undefined> {
     const params = new HttpParams().set('id', id.toString());
-    // La API devuelve un array, así que esperamos PaymentRequest[]
+
     return this.http
-      .get<PaymentRequest[]>(`${this.resourceUrl}/get_solicitud_pago`, {
-        params,
-      })
+      .post<PaymentRequest[]>(`${this.resourceUrl}/get_solicitud_pago`, {}, { params })
       .pipe(
-        // Extraemos el primer elemento del array, que es el que nos interesa.
         map((response) => (response && response.length > 0 ? response[0] : undefined))
       );
-  }
+}
 
 
 
