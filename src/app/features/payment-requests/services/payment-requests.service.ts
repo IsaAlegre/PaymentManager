@@ -22,15 +22,11 @@ export class PaymentRequestsService {
   getPaymentRequests(
     pageNumber: number,
     pageSize: number,
-    filters: { id?: number } = {}
   ): Observable<PaginatedPaymentResponse> {
+
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
-
-    if (filters.id) {
-      params = params.set('id', filters.id.toString());
-    }
 
     return this.http.get<PaginatedPaymentResponse>(
       `${this.resourceUrl}/page/solicitud_pago`,
@@ -38,7 +34,7 @@ export class PaymentRequestsService {
     );
   }
 
-  getPaymentRequestById(id: number): Observable<PaymentRequest | undefined> {
+   getPaymentRequestById(id: number): Observable<PaymentRequest | undefined> {
     // Usamos HttpParams para añadir el parámetro 'id' a la URL de forma segura.
     const params = new HttpParams().set('id', id.toString());
     // La API devuelve un array, así que esperamos PaymentRequest[]
@@ -51,6 +47,8 @@ export class PaymentRequestsService {
         map((response) => (response && response.length > 0 ? response[0] : undefined))
       );
   }
+
+
 
   createPaymentRequest(request: CreatePaymentRequest): Observable<PaymentRequest> {
     return this.http.post<PaymentRequest>(`${this.resourceUrl}/create_solicitud_pago`, request);
