@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catchError, finalize, of } from 'rxjs';
+import { catchError, finalize, of, switchMap, debounceTime } from 'rxjs';
 import { PaymentListComponent } from '../../components/payment-list/payment-list.component';
 import { PaymentLoaderComponent } from '../../components/payment-loader/payment-loader.component';
 import { PaymentRequestsService } from '../../services/payment-requests.service';
@@ -21,7 +21,7 @@ import { PaginationComponent } from '../../../../shared/components/pagination/pa
     PaymentLoaderComponent,
     PaginationComponent,
   ],
-  templateUrl: './payment-list-page.component.html',
+  templateUrl:'./payment-list-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentListPageComponent {
@@ -29,36 +29,36 @@ export class PaymentListPageComponent {
 
   public isLoading = signal(true);
   public error = signal<string | null>(null);
-  
-  // Señales privadas para poder modificarlas
+  errorMessage: string | null = null;
+
   private _currentPage = signal(1);
   private _totalElements = signal(0);
 
-  // Señales públicas de solo lectura para la vista
-  public currentPage = this._currentPage.asReadonly(); // Página actual para la UI (base 1)
+  public currentPage = this._currentPage.asReadonly();
   public itemsPerPage = signal(10).asReadonly();
   public totalElements = this._totalElements.asReadonly();
   public pagos = signal<PaymentRequest[]>([]);
 
+
   constructor() {
     this.loadPayments();
+
   }
 
+  
   loadPayments(): void {
     this.isLoading.set(true);
     this.error.set(null);
+    this.errorMessage = null;
     // La API usa paginación base 0, así que restamos 1
-    const pageNumber = this.currentPage() - 1;
+    const pageNumber = 1;
 
     this.paymentService
       .getPaymentRequests(pageNumber, this.itemsPerPage())
       .pipe(
         catchError((err) => {
-          console.error('Error fetching payments:', err);
-          this.error.set(
-            'No se pudieron cargar las solicitudes de pago. Verifique la conexión o la configuración del proxy.'
-          );
-          // Devolvemos un objeto vacío que coincide con la estructura de la respuesta paginada
+          this.error.set('No se pudieron cargar las solicitudes de pago. Verifique la conexión o la configuración del proxy.');
+          this.errorMessage = 'Ocurrió un error al cargar los pagos. Intenta nuevamente más tarde.';
           return of({ content: [], totalElements: 0, totalPages: 0, number: 0, size: 0, pageable: {} as any, last: true, sort: {} as any, first: true, numberOfElements: 0, empty: true });
         }),
         finalize(() => this.isLoading.set(false))
