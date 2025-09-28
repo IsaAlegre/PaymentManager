@@ -57,8 +57,14 @@ export interface PaginatedPaymentResponse {
 }
 
 export interface CreatePaymentRequest {
-  descripcion: string;
   importe: number;
-  referencia_externa?: string;
-  fecha_vencimiento?: string;
+  fecha_vto: string;
+  recargo?: number;
+  fecha_2do_vto?: string;
+  descripcion: string;
+  referencia_externa: string;
+  referencia_externa_2?: string;
+  url_redirect: string;
+  webhook: string;
+  qr: boolean;
 }

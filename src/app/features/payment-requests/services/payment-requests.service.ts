@@ -46,7 +46,7 @@ export class PaymentRequestsService {
 
 
 
-  createPaymentRequest(request: CreatePaymentRequest): Observable<PaymentRequest> {
-    return this.http.post<PaymentRequest>(`${this.resourceUrl}/create_solicitud_pago`, request);
+  createPaymentRequest(body: CreatePaymentRequest): Observable<CreatePaymentRequest> {
+    return this.http.post<CreatePaymentRequest>(`${this.resourceUrl}/checkout/solicitud_pago`, body);
   }
 }
