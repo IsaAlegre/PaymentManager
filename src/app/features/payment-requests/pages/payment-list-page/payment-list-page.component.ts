@@ -9,12 +9,13 @@ import { catchError, finalize, of, debounceTime, distinctUntilChanged } from 'rx
 import { PaymentListComponent } from '../../components/payment-list/payment-list.component';
 import { PaymentLoaderComponent } from '../../components/payment-loader/payment-loader.component';
 import { PaymentRequestsService } from '../../services/payment-requests.service';
-import { PaymentRequest } from '../../models/payment-request.model';
+import { CreatePaymentRequest, PaymentRequest } from '../../models/payment-request.model';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { SearchBoxComponent } from '../../../../shared/components/search-box.component';
 import { PaymentDetailModalComponent } from '../../components/payment-detail-modal/payment-detail-modal.component';
-
+import { PaymentCreateModalComponent } from '../../components/payment-create-modal/payment-create-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-payment-list-page',
@@ -26,7 +27,8 @@ import { PaymentDetailModalComponent } from '../../components/payment-detail-mod
     PaginationComponent,
     ReactiveFormsModule,
     SearchBoxComponent,
-    PaymentDetailModalComponent
+    PaymentDetailModalComponent,
+    PaymentCreateModalComponent,
   ],
   templateUrl: './payment-list-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -131,14 +133,60 @@ export class PaymentListPageComponent {
     this._currentPage.set(page);
     this.loadPayments();
   }
-
+  /** Detalle de pago */
   selectedPayment = signal<PaymentRequest | null>(null);
+  private paymentRequestsService = inject(PaymentRequestsService);
 
   onPaymentDetail(payment: PaymentRequest): void {
-    this.selectedPayment.set(payment);
+    this.paymentRequestsService.getPaymentRequestById(payment.id_sp).subscribe(detalle => {
+      if (detalle) {
+        this.selectedPayment.set(detalle); 
+      }
+    });
   }
 
-  onCloseDetail(): void {
-    this.selectedPayment.set(null);
+    onCloseDetail(): void {
+      this.selectedPayment.set(null);
+    }
+
+  /** Crear nuevo solicitud de pago */
+  isCreateModalOpen = signal(false);
+
+  onOpenCreate(): void {
+    this.isCreateModalOpen.set(true);
+  }
+
+  onCloseCreate(): void {
+    this.isCreateModalOpen.set(false);
+  }
+
+  /** Manejo de errores de form solicitud de pago usando sweetAlert **/
+  onCreatePayment(body: CreatePaymentRequest) {
+    this.paymentService.createPaymentRequest(body).subscribe({
+      next: (res) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Solicitud creada',
+          text: 'La solicitud se generó correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        });
+
+        if (res?.url_redirect) {
+          window.location.href = res.url_redirect;
+        }
+
+        this.onCloseCreate();
+        this.onRefresh();
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo crear la solicitud. Intenta de nuevo.'
+        });
+      }
+    });
   }
 }
+
