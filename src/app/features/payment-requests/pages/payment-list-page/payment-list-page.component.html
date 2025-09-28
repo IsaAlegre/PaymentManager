@@ -10,10 +10,16 @@
         class="w-full sm:w-72"
         ></app-search-box>
       <!-- Botón crear -->
-      <button
+      <button (click)="onOpenCreate()"
         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300 w-40">
         Crear Solicitud
       </button>
+
+      <app-payment-create-modal
+        *ngIf="isCreateModalOpen()"
+        (close)="onCloseCreate()"
+        (create)="onCreatePayment($event)">
+      </app-payment-create-modal>
     </div>
   </header>
 
