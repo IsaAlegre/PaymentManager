@@ -1,0 +1,103 @@
+<!-- Fondo con blur -->
+<div class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+  <section class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative"
+           role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <!-- Botón cerrar -->
+    <button 
+      (click)="onClose()"
+      class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+      aria-label="Cerrar modal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+           stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <header>
+      <h3 id="modal-title" class="text-lg font-bold text-gray-800 mb-4">
+        Crear Solicitud de Pago
+      </h3>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Descripción</label>
+        <input type="text" formControlName="descripcion"
+               class="w-full border border-gray-300 rounded-md p-2 "/>
+        <p *ngIf="f['descripcion'].touched && f['descripcion'].invalid" 
+           class="text-red-500 text-sm">
+          La descripción es obligatoria y debe tener al menos 3 caracteres.
+        </p>
+      </div>
+
+      <!-- Importe -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Importe</label>
+            <input type="number" formControlName="importe"
+                class="w-full border border-gray-300 rounded-md p-2"/>
+            <p *ngIf="f['importe'].touched && f['importe'].errors?.['required']" 
+            class="text-red-500 text-sm">
+            El importe es obligatorio.
+            </p>
+            <p *ngIf="f['importe'].touched && f['importe'].errors?.['min']" 
+            class="text-red-500 text-sm">
+            El importe debe ser mayor a 0.
+            </p>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Recargo</label>
+            <input type="number" formControlName="recargo"
+                    class="w-full border border-gray-300 rounded-md p-2"/>
+            <p *ngIf="f['recargo'].touched && f['recargo'].errors?.['min']" 
+            class="text-red-500 text-sm">
+            El recargo debe ser mayor a 0.
+            </p>
+        </div>
+
+        <!-- Fecha Vencimiento -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Fecha Vencimiento</label>
+            <input type="date" formControlName="fecha_vto"
+                class="w-full border border-gray-300 rounded-md p-2"/>
+            <p *ngIf="f['fecha_vto'].touched && f['fecha_vto'].invalid" 
+            class="text-red-500 text-sm">
+            La fecha de vencimiento es obligatoria.
+            </p>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Fecha 2º Vencimiento</label>
+            <input type="date" formControlName="fecha_2do_vto"
+                    class="w-full border border-gray-300 rounded-md p-2 "/>
+        </div>
+
+      <!-- Referencia Externa -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Referencia Externa</label>
+        <input type="text" formControlName="referencia_externa"
+               class="w-full border border-gray-300 rounded-md p-2"/>
+        <p *ngIf="f['referencia_externa'].touched && f['referencia_externa'].invalid" 
+           class="text-red-500 text-sm">
+          La referencia externa es obligatoria.
+        </p>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end gap-2 pt-4">
+        <button type="button" (click)="onClose()" 
+                class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100">
+          Cancelar
+        </button>
+        <button type="submit" 
+                class="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+                [disabled]="form.invalid">
+          Crear
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
