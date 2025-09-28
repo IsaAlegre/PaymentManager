@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  OnDestroy,
+  OnInit,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catchError, finalize, of, debounceTime, distinctUntilChanged } from 'rxjs';
+import { catchError, finalize, of, debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
 import { PaymentListComponent } from '../../components/payment-list/payment-list.component';
 import { PaymentLoaderComponent } from '../../components/payment-loader/payment-loader.component';
 import { PaymentRequestsService } from '../../services/payment-requests.service';
@@ -33,7 +35,7 @@ import Swal from 'sweetalert2';
   templateUrl: './payment-list-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentListPageComponent {
+export class PaymentListPageComponent implements OnInit, OnDestroy {
   private paymentService = inject(PaymentRequestsService);
 
   public isLoading = signal(true);
@@ -50,9 +52,47 @@ export class PaymentListPageComponent {
 
   searchControl = new FormControl('');
 
+  private loadPaymentsTrigger$ = new Subject<number>();
+  private destroy$ = new Subject<void>();
+
   constructor() {
-    this.loadPayments();
   }
+  ngOnInit(): void {
+    this.loadPaymentsTrigger$.pipe(
+      // switchMap cancela la petición anterior si llega una nueva
+      switchMap((page) => {
+        this.isLoading.set(true);
+        this.error.set(null);
+        this.errorMessage = null;
+        this._currentPage.set(page); // Actualizamos la página actual
+        const pageNumber = page - 1;
+
+        return this.paymentService.getPaymentRequests(pageNumber, this.itemsPerPage()).pipe(
+          catchError(() => {
+            this.error.set('No se pudieron cargar las solicitudes de pago. Verifique la conexión o la configuración del proxy.');
+            this.errorMessage = 'Ocurrió un error al cargar los pagos. Intenta nuevamente más tarde.';
+            return of({ content: [], totalElements: 0 }); // Devolver un objeto con la estructura esperada
+          }),
+          finalize(() => this.isLoading.set(false))
+        );
+      }),
+      // La suscripción se cancelará cuando el componente se destruya
+      takeUntil(this.destroy$)
+    ).subscribe((response) => {
+      this.pagos.set(response.content);
+      this._totalElements.set(response.totalElements);
+    });
+
+    // Disparar la carga inicial
+    this.loadPaymentsTrigger$.next(1);
+  }
+
+  // 8. Implementar ngOnDestroy para limpiar la suscripción
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
 
   /** Búsqueda por ID */
   onSearchById(id: string): void {
@@ -87,51 +127,15 @@ export class PaymentListPageComponent {
       });
   }
 
-  /** Cargar lista paginada */
-  loadPayments(): void {
-    this.isLoading.set(true);
-    this.error.set(null);
-    this.errorMessage = null;
-    const pageNumber = this._currentPage() - 1;
-
-    this.paymentService
-      .getPaymentRequests(pageNumber, this.itemsPerPage())
-      .pipe(
-        catchError(() => {
-          this.error.set('No se pudieron cargar las solicitudes de pago. Verifique la conexión o la configuración del proxy.');
-          this.errorMessage = 'Ocurrió un error al cargar los pagos. Intenta nuevamente más tarde.';
-          return of({
-            content: [],
-            totalElements: 0,
-            totalPages: 0,
-            number: 0,
-            size: 0,
-            pageable: {} as any,
-            last: true,
-            sort: {} as any,
-            first: true,
-            numberOfElements: 0,
-            empty: true
-          });
-        }),
-        finalize(() => this.isLoading.set(false))
-      )
-      .subscribe((response) => {
-        this.pagos.set(response.content);
-        this._totalElements.set(response.totalElements);
-      });
-  }
-
   /**Refrescar lista */
   onRefresh(): void {
     this._currentPage.set(1);
-    this.loadPayments();
+    this.loadPaymentsTrigger$.next(1);
   }
 
   /** Cambiar página */
   onPageChange(page: number): void {
-    this._currentPage.set(page);
-    this.loadPayments();
+    this.loadPaymentsTrigger$.next(page);
   }
   /** Detalle de pago */
   selectedPayment = signal<PaymentRequest | null>(null);
@@ -189,4 +193,3 @@ export class PaymentListPageComponent {
     });
   }
 }
-
