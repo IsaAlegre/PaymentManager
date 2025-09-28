@@ -13,6 +13,7 @@ import { PaymentRequest } from '../../models/payment-request.model';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { SearchBoxComponent } from '../../../../shared/components/search-box.component';
+import { PaymentDetailModalComponent } from '../../components/payment-detail-modal/payment-detail-modal.component';
 
 
 @Component({
@@ -24,7 +25,8 @@ import { SearchBoxComponent } from '../../../../shared/components/search-box.com
     PaymentLoaderComponent,
     PaginationComponent,
     ReactiveFormsModule,
-    SearchBoxComponent
+    SearchBoxComponent,
+    PaymentDetailModalComponent
   ],
   templateUrl: './payment-list-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +52,7 @@ export class PaymentListPageComponent {
     this.loadPayments();
   }
 
-  /** 🔎 Búsqueda por ID */
+  /** Búsqueda por ID */
   onSearchById(id: string): void {
     if (!id) {
       this.onRefresh();
@@ -83,7 +85,7 @@ export class PaymentListPageComponent {
       });
   }
 
-  /** 📄 Cargar lista paginada */
+  /** Cargar lista paginada */
   loadPayments(): void {
     this.isLoading.set(true);
     this.error.set(null);
@@ -118,15 +120,25 @@ export class PaymentListPageComponent {
       });
   }
 
-  /** 🔄 Refrescar lista */
+  /**Refrescar lista */
   onRefresh(): void {
     this._currentPage.set(1);
     this.loadPayments();
   }
 
-  /** 📑 Cambiar página */
+  /** Cambiar página */
   onPageChange(page: number): void {
     this._currentPage.set(page);
     this.loadPayments();
+  }
+
+  selectedPayment = signal<PaymentRequest | null>(null);
+
+  onPaymentDetail(payment: PaymentRequest): void {
+    this.selectedPayment.set(payment);
+  }
+
+  onCloseDetail(): void {
+    this.selectedPayment.set(null);
   }
 }
