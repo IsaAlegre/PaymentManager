@@ -26,11 +26,11 @@
 
    <app-payment-loader *ngIf="isLoading()"></app-payment-loader>
 
-    <div *ngIf="error()" class="bg-red-50 border border-red-200 rounded-lg p-6">
-      <p class="text-red-700">{{ error() }}</p>
+    <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-6">
+      <p class="text-red-700">{{ errorMessage }}</p>
     </div>
 
-    <div *ngIf="errorMessage" class="error-message">
+    <div *ngIf="errorMessage" class="errorMessage">
       {{ errorMessage }}
     </div>
 
