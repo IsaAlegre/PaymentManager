@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import { PaymentRequest } from '../../models/payment-request.model';
 import { CommonModule } from '@angular/common';
 import { PaymentStatusPipe } from '../../pipes/payment-status.pipe';
@@ -18,8 +18,9 @@ export class PaymentListComponent {
    onPaymentSelect(payment: PaymentRequest): void {
     this.paymentSelect.emit(payment);
   }
+
   onPaymentDetail(payment: PaymentRequest, event: Event): void {
-    // no se dispare también el evento de selección de toda la fila.
+    // Evita que se dispare el evento de selección de fila
     event.stopPropagation(); 
     this.paymentDetail.emit(payment);
   }

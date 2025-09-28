@@ -31,8 +31,15 @@
       <!-- Lista de pagos -->
     <app-payment-list
       *ngIf="!isLoading() && !error()"
-      [payments]="pagos()"> 
+      [payments]="pagos()"
+      (paymentDetail)="onPaymentDetail($event)">
     </app-payment-list>
+
+    <app-payment-detail-modal
+      *ngIf="selectedPayment()"
+      [payment]="selectedPayment()"
+      (closed)="onCloseDetail()">
+    </app-payment-detail-modal>
 
    <!-- Mensaje cuando no hay pagos  -->
     <div *ngIf="!isLoading() && !error() && pagos().length === 0"  
