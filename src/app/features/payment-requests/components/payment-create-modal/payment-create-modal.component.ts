@@ -73,7 +73,7 @@ export class PaymentCreateModalComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group<CreatePaymentRequestForm>({
-      descripcion: this.fb.control('', { validators: [Validators.required, Validators.minLength(3)] }),
+      descripcion: this.fb.control('', { validators: [Validators.required, Validators.minLength(5)] }),
       importe: this.fb.control(null, { validators: [Validators.required, Validators.min(1)] }),
       fecha_vto: this.fb.control('', { validators: [Validators.required] }),
       recargo: this.fb.control(null, { validators: [Validators.min(1)] }),
