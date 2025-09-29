@@ -1,0 +1,51 @@
+<div class="overflow-x-auto rounded-lg shadow">
+  <table class="w-full">
+    <thead class="bg-blue-300">
+      <tr class="border-b border-gray-200">
+        <th scope="col" class="w-20 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">ID</th>
+        <th scope="col" class="w-32 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Descripción</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Importe</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Fecha Creación</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Estado</th>
+        <th scope="col" class="w-24 p-3 text-left text-sm font-medium text-gray-700 tracking-wide">Acciones</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 bg-white"> 
+      <tr
+        *ngFor="let payment of payments"
+        class="hover:bg-gray-50"
+        (click)="onPaymentSelect(payment)"
+      >
+        <td class="p-3  text-sm font-semibold text-gray-800 whitespace-nowrap">
+          {{ payment.id_sp }}
+        </td>
+
+        <td class="p-3 text-sm font-semibold text-gray-800 truncate whitespace-nowrap" [title]="payment.descripcion">
+            {{ payment.descripcion }}
+        </td>
+
+        <td class="p-3 text-sm font-semibold text-gray-800 whitespace-nowrap">
+          {{ payment.importe_pagado | currency:'USD':'symbol':'1.2-2' }}
+        </td>
+        
+        <td class="p-3 text-sm  text-gray-500 whitespace-nowrap">
+          {{ payment.fecha_creacion | date:'dd/MM/yyyy' }}
+        </td>
+        
+        <td class="p-3 text-sm whitespace-nowrap">
+          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" [class]="payment.estado_pago | paymentStatus:'class'">
+            {{ payment.estado_pago | paymentStatus:'text' }}
+          </span>
+        </td>
+
+        <td class="p-3 text-sm whitespace-nowrap">
+          <button 
+            (click)="onPaymentDetail(payment, $event)" 
+            class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
+            Ver Detalles
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,59 +1,123 @@
 # PaymentManager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.2.
+PaymentManager es una aplicación web desarrollada con Angular para la gestión de solicitudes de pago.
+El proyecto implementa arquitectura modular, un enfoque zoneless y patrones de buenas prácticas en Angular, priorizando performance, escalabilidad y mantenibilidad.
 
-## Development server
+## Características principales
 
-To start a local development server, run:
+- Registro y creación de solicitudes de pago con validaciones avanzadas.
+- Visualización de historial de solicitudes.
+- Detalle ampliado de cada solicitud.
+- Paginación en listado.
+- Búsqueda por ID con validación y mensajes de error.
+- Cancelación de peticiones duplicadas con switchMap y takeUntil.
+- UI responsiva, construida con TailwindCSS.
+- Manejo de estados con signals y ChangeDetectionStrategy.OnPush.
+- Notificaciones al usuario con SweetAlert2.
+- Testing para casos basicos: actualmente para renderizado de lista, formularios de creacion y paginacion correcta. 
+
+
+## Estructura del proyecto
+
+El proyecto sigue una arquitectura modular de Angular:
+
+- `src/app/core`: servicios globales y configuración.
+- `src/app/features`: funcionalidades principales (ej. `payment-requests`).
+- `src/app/shared`: componentes, directivas y pipes reutilizables.
+- `src/environments`: configuración de entornos (`dev`, `prod`, `secret`).
+
+Esta organización facilita la escalabilidad y el mantenimiento del proyecto.
+
+## Tecnologías utilizadas
+
+- [Angular CLI](https://github.com/angular/angular-cli) v20.3.2
+- TypeScript
+- RxJS
+- TailwindCSS
+- SweetAlert2
+
+## Estructura del Proyecto
+
+```
+src/
+└── app/
+    ├── core/                  # Servicios globales y configuración
+    ├── features/              # Funcionalidades principales
+    │   └── payment-requests/
+    │       ├── components/    # Componentes específicos (list, create-modal, detail)
+    │       ├── models/        # Interfaces y modelos tipados
+    │       ├── pages/         # Páginas (listado principal)
+    │       └── services/      # Comunicación con la API
+    ├── shared/                # Componentes reutilizables (search-box, pagination, etc.)
+└── environments/              # Configuración de entornos
+```
+
+
+## Configuración de entorno
+
+**Es necesario crear el archivo `src/environments/environment.secret.ts`** con el siguiente contenido, donde debes colocar la URL de la API y el token de autenticación:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'https://TU_API_URL',
+  apiToken: 'TU_API_TOKEN',
+};
+```
+
+Este archivo es requerido para que la aplicación pueda conectarse correctamente al backend.
+
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/IsaAlegre/PaymentManager.git
+   cd PaymentManager
+   ```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+## Servidor de desarrollo
+
+Para iniciar el servidor de desarrollo local, ejecuta:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Luego abre tu navegador en `http://localhost:4200/`. La aplicación se recargará automáticamente al modificar los archivos fuente.
 
-## Code scaffolding
+## Compilación
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Para compilar el proyecto:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los archivos compilados se almacenarán en el directorio `dist/`.
 
-## Running unit tests
+## Pruebas unitarias
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Para ejecutar las pruebas unitarias con [Karma](https://karma-runner.github.io):
 
 ```bash
 ng test
 ```
+Actualmente se incluyen pruebas básicas de renderizado de lista, formulario y paginación.
 
-## Running end-to-end tests
+## Flujo de trabajo (Git)
 
-For end-to-end (e2e) testing, run:
+El desarrollo se realizó en la rama dev, con Conventional Commits (feat:, fix:, chore:).
+Para la entrega, se integró a main mediante Pull Request siguiendo GitHub Flow.
 
-```bash
-ng e2e
-```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Recursos adicionales
 
-## Additional Resources
+- [Documentación oficial de Angular](https://angular.dev/docs)
+- [Referencia de comandos Angular CLI](https://angular.dev/tools/cli)
+- [Guía de estilo Angular](https://angular.dev/guide/styleguide)
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
