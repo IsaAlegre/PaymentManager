@@ -42,9 +42,9 @@
             class="text-red-500 text-sm">
             El importe es obligatorio.
             </p>
-            <p *ngIf="f['importe'].touched && f['importe'].errors?.['min']" 
-            class="text-red-500 text-sm">
-            El importe debe ser mayor a 0.
+            <p *ngIf="f['importe'].touched && f['importe'].errors?.['invalid']" 
+                class="text-red-500 text-sm">
+                {{ f['importe'].errors?.['invalid'] }}
             </p>
         </div>
 
@@ -52,9 +52,9 @@
             <label class="block text-sm font-medium text-gray-700">Recargo</label>
             <input type="number" formControlName="recargo"
                     class="w-full border border-gray-300 rounded-md p-2"/>
-            <p *ngIf="f['recargo'].touched && f['recargo'].errors?.['min']" 
-            class="text-red-500 text-sm">
-            El recargo debe ser mayor a 0.
+            <p *ngIf="f['importe'].touched && f['importe'].errors?.['invalid']" 
+                class="text-red-500 text-sm">
+                {{ f['importe'].errors?.['invalid'] }}
             </p>
         </div>
 

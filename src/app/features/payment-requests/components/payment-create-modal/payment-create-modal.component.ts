@@ -12,22 +12,27 @@ function vencimientoNoAnteriorHoy(control: AbstractControl) {
     const fechaVto = form.get('fecha_vto')?.value;
     const fecha2doVto = form.get('fecha_2do_vto')?.value;
 
-    let errors: any = {};
+    let errors: ValidationErrors = {};
 
     if (fechaVto) {
-        const vto = new Date(fechaVto);
-        vto.setHours(0, 0, 0, 0);
+        const vto = new Date(fechaVto + 'T00:00:00'); 
         if (vto < hoy) {
-        errors.fecha_vto = 'La fecha de vencimiento no puede ser anterior a hoy';
+        errors['fechaVencida'] = 'La fecha de vencimiento no puede ser anterior a hoy';
         }
     }
 
     if (fecha2doVto) {
-        const vto2 = new Date(fecha2doVto);
-        vto2.setHours(0, 0, 0, 0);
+        const vto2 = new Date(fecha2doVto + 'T00:00:00');
         if (vto2 < hoy) {
-        errors.fecha_2do_vto = 'La segunda fecha de vencimiento no puede ser anterior a hoy';
+        errors['segundaFechaVencida'] = 'La segunda fecha de vencimiento no puede ser anterior a hoy';
         }
+    }
+
+    if (errors['fechaVencida']) {
+        form.get('fecha_vto')?.setErrors({ fechaVencida: true });
+    }
+    if (errors['segundaFechaVencida']) {
+        form.get('fecha_2do_vto')?.setErrors({ segundaFechaVencida: true });
     }
 
     return Object.keys(errors).length ? errors : null;
@@ -74,9 +79,9 @@ export class PaymentCreateModalComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group<CreatePaymentRequestForm>({
       descripcion: this.fb.control('', { validators: [Validators.required, Validators.minLength(5)] }),
-      importe: this.fb.control(null, { validators: [Validators.required, Validators.min(1)] }),
+      importe: this.fb.control(null, { validators: [Validators.required, importeValido] }),
       fecha_vto: this.fb.control('', { validators: [Validators.required] }),
-      recargo: this.fb.control(null, { validators: [Validators.min(1)] }),
+      recargo: this.fb.control(null, { validators: [importeValido] }),
       fecha_2do_vto: this.fb.control(''),
       referencia_externa: this.fb.control('', { validators: [Validators.required] }),
       referencia_externa_2: this.fb.control(''),
@@ -88,23 +93,34 @@ export class PaymentCreateModalComponent {
 
 
   onSubmit() {
-  if (this.form.valid) {
-    let body: CreatePaymentRequest = { ...this.form.value };
-
-    // Normalizar fechas
-    body.fecha_vto = new Date(body.fecha_vto).toISOString().split('T')[0];
-    if (body.fecha_2do_vto) {
-      body.fecha_2do_vto = new Date(body.fecha_2do_vto).toISOString().split('T')[0];
+    if (this.form.invalid) {
+        this.form.markAllAsTouched();
+        return;
     }
 
-    // ✅ Convertir importe/recargo a enteros con 2 decimales implícitos
-    body.importe = Math.round((this.form.value.importe ?? 0) * 100);
-    body.recargo = Math.round((this.form.value.recargo ?? 0) * 100);
+    const formValue = this.form.getRawValue();
 
-    console.log('Body enviado:', body); // 👈 Ver en consola
+    // Construimos el cuerpo del request de forma segura
+    const body: CreatePaymentRequest = {
+        // Campos obligatorios
+        descripcion: formValue.descripcion!,
+        importe: Math.round((formValue.importe ?? 0) * 100),
+        fecha_vto: formValue.fecha_vto!, // <-- SIMPLEMENTE SE TOMA EL VALOR DIRECTO
+        referencia_externa: formValue.referencia_externa!,
+        url_redirect: formValue.url_redirect!,
+        webhook: formValue.webhook!,
+        qr: formValue.qr!,
+
+        // Campos opcionales (se añaden solo si tienen valor)
+        ...(formValue.recargo && { recargo: Math.round(formValue.recargo * 100) }),
+        ...(formValue.fecha_2do_vto && { fecha_2do_vto: formValue.fecha_2do_vto }),
+        ...(formValue.referencia_externa_2 && { referencia_externa_2: formValue.referencia_externa_2 }),
+    };
+
+    // El console.log para verificar
+    console.log('Body enviado:', body);
 
     this.create.emit(body);
-  }
 }
   onClose() {
     this.close.emit();
