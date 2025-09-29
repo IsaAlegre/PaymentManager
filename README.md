@@ -1,13 +1,21 @@
 # PaymentManager
 
-PaymentManager es una aplicación web desarrollada con Angular que permite gestionar pagos de manera eficiente y sencilla. El proyecto está diseñado para facilitar el registro, seguimiento y administración de pagos en distintos contextos, como empresas, organizaciones o proyectos personales.
+PaymentManager es una aplicación web desarrollada con Angular para la gestión de solicitudes de pago.
+El proyecto implementa arquitectura modular, un enfoque zoneless y patrones de buenas prácticas en Angular, priorizando performance, escalabilidad y mantenibilidad.
 
 ## Características principales
 
-- Registro y edición de pagos.
-- Visualización de historial de pagos.
-- Filtros y búsqueda avanzada.
-- Interfaz intuitiva y responsiva.
+- Registro y creación de solicitudes de pago con validaciones avanzadas.
+- Visualización de historial de solicitudes.
+- Detalle ampliado de cada solicitud.
+- Paginación en listado.
+- Búsqueda por ID con validación y mensajes de error.
+- Cancelación de peticiones duplicadas con switchMap y takeUntil.
+- UI responsiva, construida con TailwindCSS.
+- Manejo de estados con signals y ChangeDetectionStrategy.OnPush.
+- Notificaciones al usuario con SweetAlert2.
+- Testing para casos basicos: actualmente para renderizado de lista, formularios de creacion y paginacion correcta. 
+
 
 ## Estructura del proyecto
 
@@ -24,20 +32,24 @@ Esta organización facilita la escalabilidad y el mantenimiento del proyecto.
 
 - [Angular CLI](https://github.com/angular/angular-cli) v20.3.2
 - TypeScript
-- HTML5 & CSS3
 - RxJS
+- TailwindCSS
+- SweetAlert2
 
-## Instalación
+## Estructura del Proyecto
+src/app/
+│
+├── core/                # Servicios globales y configuración
+├── features/            # Funcionalidades principales
+│   └── payment-requests/
+│       ├── components/  # Componentes específicos (list, create-modal, detail)
+│       ├── models/      # Interfaces y modelos tipados
+│       ├── pages/       # Páginas (listado principal)
+│       └── services/    # Comunicación con la API
+│
+├── shared/              # Componentes reutilizables (search-box, pagination, etc.)
+└── environments/        # Configuración de entornos
 
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/PaymentManager.git
-   cd PaymentManager
-   ```
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
 
 ## Configuración de entorno
 
@@ -53,6 +65,18 @@ export const environment = {
 
 Este archivo es requerido para que la aplicación pueda conectarse correctamente al backend.
 
+## Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/IsaAlegre/PaymentManager.git
+   cd PaymentManager
+   ```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
 ## Servidor de desarrollo
 
 Para iniciar el servidor de desarrollo local, ejecuta:
@@ -62,20 +86,6 @@ ng serve
 ```
 
 Luego abre tu navegador en `http://localhost:4200/`. La aplicación se recargará automáticamente al modificar los archivos fuente.
-
-## Generación de código
-
-Angular CLI incluye herramientas para generar código automáticamente. Por ejemplo, para crear un nuevo componente:
-
-```bash
-ng generate component nombre-componente
-```
-
-Para ver todos los esquemas disponibles:
-
-```bash
-ng generate --help
-```
 
 ## Compilación
 
@@ -94,17 +104,12 @@ Para ejecutar las pruebas unitarias con [Karma](https://karma-runner.github.io):
 ```bash
 ng test
 ```
+Actualmente se incluyen pruebas básicas de renderizado de lista, formulario y paginación.
 
-## Pruebas end-to-end
+## Flujo de trabajo (Git)
 
-Para pruebas end-to-end (e2e):
-
-```bash
-ng e2e
-```
-
-Angular CLI no incluye un framework e2e por defecto, puedes elegir el que prefieras.
-
+El desarrollo se realizó en la rama dev, con Conventional Commits (feat:, fix:, chore:).
+Para la entrega, se integró a main mediante Pull Request siguiendo GitHub Flow.
 
 
 ## Recursos adicionales
