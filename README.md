@@ -37,18 +37,20 @@ Esta organización facilita la escalabilidad y el mantenimiento del proyecto.
 - SweetAlert2
 
 ## Estructura del Proyecto
-src/app/
-│
-├── core/                # Servicios globales y configuración
-├── features/            # Funcionalidades principales
-│   └── payment-requests/
-│       ├── components/  # Componentes específicos (list, create-modal, detail)
-│       ├── models/      # Interfaces y modelos tipados
-│       ├── pages/       # Páginas (listado principal)
-│       └── services/    # Comunicación con la API
-│
-├── shared/              # Componentes reutilizables (search-box, pagination, etc.)
-└── environments/        # Configuración de entornos
+
+```
+src/
+└── app/
+    ├── core/                  # Servicios globales y configuración
+    ├── features/              # Funcionalidades principales
+    │   └── payment-requests/
+    │       ├── components/    # Componentes específicos (list, create-modal, detail)
+    │       ├── models/        # Interfaces y modelos tipados
+    │       ├── pages/         # Páginas (listado principal)
+    │       └── services/      # Comunicación con la API
+    ├── shared/                # Componentes reutilizables (search-box, pagination, etc.)
+└── environments/              # Configuración de entornos
+```
 
 
 ## Configuración de entorno
