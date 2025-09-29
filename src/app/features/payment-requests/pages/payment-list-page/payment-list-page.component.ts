@@ -50,8 +50,6 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
   public totalElements = this._totalElements.asReadonly();
   public pagos = signal<PaymentRequest[]>([]);
 
-  searchControl = new FormControl('');
-
   private loadPaymentsTrigger$ = new Subject<number>();
   private destroy$ = new Subject<void>();
 
@@ -96,37 +94,47 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
 
   /** Búsqueda por ID */
   onSearchById(id: string): void {
+    // Si el ID está vacío (cuando el usuario borra el input), refresca la lista.
     if (!id) {
+      this.error.set(null);
+      this.errorMessage = null;
       this.onRefresh();
       return;
     }
-
+    
     const numericId = Number(id);
     if (isNaN(numericId)) {
+      // Limpia la lista y el total si la búsqueda no es válida
+      this.pagos.set([]);
+      this._totalElements.set(0);
       this.error.set('El ID debe ser un número válido.');
       return;
     }
-
     this.isLoading.set(true);
+    // La lógica de búsqueda existente se mantiene igual
     this.paymentService.getPaymentRequestById(numericId)
-      .pipe(finalize(() => this.isLoading.set(false)))
-      .subscribe({
-        next: (payment) => {
-          if (payment) {
-            this.pagos.set([payment]);
-            this._totalElements.set(1);
-          } else {
-            this.pagos.set([]);
-            this._totalElements.set(0);
-            this.errorMessage = `No se encontró ninguna solicitud con ID ${id}`;
-          }
-        },
-        error: () => {
-          this.error.set('Ocurrió un error al buscar la solicitud.');
+    .pipe(finalize(() => this.isLoading.set(false)))
+    .subscribe({
+      next: (payment) => {
+        if (payment) {
+          this.pagos.set([payment]);
+          this._totalElements.set(1);
+          this.error.set(null);
+          this.errorMessage = null;
+        } else {
+          this.pagos.set([]);
+          this._totalElements.set(0);
+          this.error.set(null);
+          this.errorMessage = `No se encontró ninguna solicitud con ID ${id}`;
         }
-      });
+      },
+      error: () => {
+        this.error.set('Ocurrió un error al buscar la solicitud.');
+        this.pagos.set([]);
+        this._totalElements.set(0);
+      }
+    });
   }
-
   /**Refrescar lista */
   onRefresh(): void {
     this._currentPage.set(1);

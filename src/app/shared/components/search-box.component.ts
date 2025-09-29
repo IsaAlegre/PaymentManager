@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-search-box',
@@ -12,19 +13,26 @@ export class SearchBoxComponent {
   searchControl = new FormControl('');
 
   @Output() search = new EventEmitter<string>();
-  @Output() cleared = new EventEmitter<void>();
 
-  constructor() {
-    // Escuchar cambios con debounce
-    this.searchControl.valueChanges.subscribe(value => {
-      if (value) {
-        this.search.emit(value);
-      }
+  private destroy$ = new Subject<void>();
+
+  ngOnInit(): void {
+    // Escuchar cambios con debounce para evitar emisiones excesivas
+    this.searchControl.valueChanges.pipe(
+      debounceTime(400), // Espera 400ms después de que el usuario deja de teclear
+      distinctUntilChanged(), // Solo emite si el valor cambia
+      takeUntil(this.destroy$)
+    ).subscribe(value => {
+      this.search.emit(value ?? '');
     });
   }
 
   clearSearch(): void {
-    this.searchControl.reset();
-    this.cleared.emit();
+    this.searchControl.setValue(''); // Usa setValue para disparar el valueChanges
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
