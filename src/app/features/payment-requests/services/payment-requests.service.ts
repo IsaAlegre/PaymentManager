@@ -15,21 +15,17 @@ export class PaymentRequestsService {
   private http = inject(HttpClient);
   private configService = inject(ConfigService);
 
-  private get resourceUrl(): string {
-    return `${this.configService.apiUrl}/api/solicitud_pago/v1`;
-  }
-
   getPaymentRequests(
     pageNumber: number,
     pageSize: number,
   ): Observable<PaginatedPaymentResponse> {
 
-    let params = new HttpParams()
+    const params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
     return this.http.get<PaginatedPaymentResponse>(
-      `${this.resourceUrl}/page/solicitud_pago`,
+      this.configService.solicitudPagoPaged,
       { params }
     );
   }
@@ -38,15 +34,13 @@ export class PaymentRequestsService {
     const params = new HttpParams().set('id', id.toString());
 
     return this.http
-      .post<PaymentRequest[]>(`${this.resourceUrl}/get_solicitud_pago`, {}, { params })
+      .post<PaymentRequest[]>(this.configService.solicitudPagoById, {}, { params })
       .pipe(
         map((response) => (response && response.length > 0 ? response[0] : undefined))
       );
 }
 
-
-
   createPaymentRequest(body: CreatePaymentRequest): Observable<CreatePaymentRequest> {
-    return this.http.post<CreatePaymentRequest>(`${this.resourceUrl}/checkout/solicitud_pago`, body);
+    return this.http.post<CreatePaymentRequest>(this.configService.solicitudPagoCheckout, body);
   }
 }

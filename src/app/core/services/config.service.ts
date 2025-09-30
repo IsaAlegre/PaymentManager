@@ -5,6 +5,25 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class ConfigService {
-  public apiUrl = environment.apiUrl;
-  public apiToken = environment.apiToken;
+  private readonly baseUrl = `${environment.apiUrl}/api/solicitud_pago/v1`;
+
+  get apiToken(): string {
+    return environment.apiToken;
+  }
+  
+  get solicitudPagoBase(): string {
+    return this.baseUrl;
+  }
+
+  get solicitudPagoPaged(): string {
+    return `${this.baseUrl}/page/solicitud_pago`;
+  }
+
+  get solicitudPagoById(): string {
+    return `${this.baseUrl}/get_solicitud_pago`;
+  }
+
+  get solicitudPagoCheckout(): string {
+    return `${this.baseUrl}/checkout/solicitud_pago`;
+  }
 }
