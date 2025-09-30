@@ -16,8 +16,8 @@
       />
 
       <!-- Botón limpiar -->
+       @if (searchControl.value) {
       <button
-        *ngIf="searchControl.value"
         type="button"
         (click)="clearSearch()"
         class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
@@ -28,4 +28,5 @@
                 d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
+      }
 </div>

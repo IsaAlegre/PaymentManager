@@ -23,7 +23,6 @@ import Swal from 'sweetalert2';
   selector: 'app-payment-list-page',
   standalone: true,
   imports: [
-    CommonModule,
     PaymentListComponent,
     PaymentLoaderComponent,
     PaginationComponent,

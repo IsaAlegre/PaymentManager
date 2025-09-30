@@ -11,8 +11,8 @@
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 bg-white"> 
+      @for (payment of payments; track payment.id_sp) {
       <tr
-        *ngFor="let payment of payments"
         class="hover:bg-gray-50"
         (click)="onPaymentSelect(payment)"
       >
@@ -46,6 +46,7 @@
           </button>
         </td>
       </tr>
+      }
     </tbody>
   </table>
 </div>
