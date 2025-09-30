@@ -25,7 +25,7 @@
     </header>
 
     <!-- Contenido -->
-    <div *ngIf="payment as payment; else noData">
+     @if (payment) {
       <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- ID -->
         <div>
@@ -42,14 +42,20 @@
           <dt class="text-sm text-gray-500">Importe Pagado</dt>
           <dd class="font-semibold text-gray-800">{{ payment.importe_pagado | currency:'USD' }}</dd>
         </div>
-        <div *ngIf="payment.importe" class="md:col-span-2">
+
+        @if (payment.importe){
+        <div class="md:col-span-2">
           <dt class="text-sm text-gray-500">Importe Original</dt>
           <dd class="font-semibold text-gray-800">{{ payment.importe | currency:'USD' }}</dd>
         </div>
-        <div *ngIf="payment.importe_vencido" class="col-span-2">
+        }
+        @if (payment.importe_vencido){
+        <div class="col-span-2">
           <dt class="text-sm text-gray-500">Importe Vencido</dt>
           <dd class="font-semibold text-red-600">{{ payment.importe_vencido | currency:'USD' }}</dd>
         </div>
+        }
+
         <!-- Estado y medio de pago -->
         <div>
           <dt class="text-sm text-gray-500">Estado</dt>
@@ -66,11 +72,9 @@
           <dd class="font-semibold">{{ payment.medio_pago }}</dd>
         </div>
       </dl>
-    </div>
-
-    <ng-template #noData>
+      } @else {
       <p class="text-gray-500">No hay información disponible.</p>
-    </ng-template>
+      }
   </section>
 </div>
 
