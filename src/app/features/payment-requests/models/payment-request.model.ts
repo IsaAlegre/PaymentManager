@@ -23,14 +23,14 @@ export interface PaymentRequest {
 
 export type PaymentStatus = 'PROCESADA' | 'PENDIENTE' | 'CANCELADA' | 'RECHAZADA' | 'VENCIDA';
 
-export type PaymentRequestsResponse = PaymentRequest[];
+export interface Sort {
+  sorted: boolean;
+  unsorted: boolean;
+  empty: boolean;
+}
 
 export interface Pageable {
-  sort: {
-    sorted: boolean;
-    unsorted: boolean;
-    empty: boolean;
-  };
+  sort: Sort;
   offset: number;
   pageNumber: number;
   pageSize: number;
@@ -38,23 +38,21 @@ export interface Pageable {
   unpaged: boolean;
 }
 
-export interface PaginatedPaymentResponse {
-  content: PaymentRequest[];
+export interface PaginatedResponse<T> {
+  content: T[];
   pageable: Pageable;
   last: boolean;
   totalPages: number;
   totalElements: number;
   size: number;
-  number: number; // El número de la página actual (base 0)
-  sort: {
-    sorted: boolean;
-    unsorted: boolean;
-    empty: boolean;
-  };
+  number: number; // número de página actual (base 0)
+  sort: Sort;
   first: boolean;
   numberOfElements: number;
   empty: boolean;
 }
+
+export type PaginatedPaymentResponse = PaginatedResponse<PaymentRequest>;
 
 export interface CreatePaymentRequest {
   importe: number;

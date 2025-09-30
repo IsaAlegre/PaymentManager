@@ -3,7 +3,7 @@ import { Observable, map } from 'rxjs';
 import {
   PaymentRequest,
   CreatePaymentRequest,
-  PaginatedPaymentResponse,
+  PaginatedResponse,
 } from '../models/payment-request.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from '../../../core/services/config.service';
@@ -18,13 +18,13 @@ export class PaymentRequestsService {
   getPaymentRequests(
     pageNumber: number,
     pageSize: number,
-  ): Observable<PaginatedPaymentResponse> {
+  ): Observable<PaginatedResponse<PaymentRequest>> {
 
     const params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<PaginatedPaymentResponse>(
+    return this.http.get<PaginatedResponse<PaymentRequest>>(
       this.configService.solicitudPagoPaged,
       { params }
     );
