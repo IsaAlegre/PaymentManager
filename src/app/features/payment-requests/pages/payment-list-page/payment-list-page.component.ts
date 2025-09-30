@@ -39,7 +39,6 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
 
   public isLoading = signal(true);
   public error = signal<string | null>(null);
-  public errorMessage: string | null = null;
 
   private _currentPage = signal(1);
   private _totalElements = signal(0);
@@ -60,14 +59,12 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
       switchMap((page) => {
         this.isLoading.set(true);
         this.error.set(null);
-        this.errorMessage = null;
         this._currentPage.set(page); // Actualizamos la página actual
         const pageNumber = page - 1;
 
         return this.paymentService.getPaymentRequests(pageNumber, this.itemsPerPage()).pipe(
           catchError(() => {
-            this.error.set('No se pudieron cargar las solicitudes de pago. Verifique la conexión o la configuración del proxy.');
-            this.errorMessage = 'Ocurrió un error al cargar los pagos. Intenta nuevamente más tarde.';
+            this.error.set('Ocurrió un error al cargar los pagos. Intenta nuevamente más tarde.');
             return of({ content: [], totalElements: 0 }); // Devolver un objeto con la estructura esperada
           }),
           finalize(() => this.isLoading.set(false))
@@ -96,21 +93,18 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
     // Si el ID está vacío (cuando el usuario borra el input), refresca la lista.
     if (!id) {
       this.error.set(null);
-      this.errorMessage = null;
       this.onRefresh();
       return;
     }
     
     const numericId = Number(id);
     if (isNaN(numericId)) {
-      // Limpia la lista y el total si la búsqueda no es válida
       this.pagos.set([]);
       this._totalElements.set(0);
       this.error.set('El ID debe ser un número válido.');
       return;
     }
     this.isLoading.set(true);
-    // La lógica de búsqueda existente se mantiene igual
     this.paymentService.getPaymentRequestById(numericId)
     .pipe(finalize(() => this.isLoading.set(false)))
     .subscribe({
@@ -119,12 +113,10 @@ export class PaymentListPageComponent implements OnInit, OnDestroy {
           this.pagos.set([payment]);
           this._totalElements.set(1);
           this.error.set(null);
-          this.errorMessage = null;
         } else {
           this.pagos.set([]);
           this._totalElements.set(0);
           this.error.set(null);
-          this.errorMessage = `No se encontró ninguna solicitud con ID ${id}`;
         }
       },
       error: () => {
