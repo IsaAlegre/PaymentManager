@@ -11,7 +11,7 @@ describe('PaymentCreateModalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, PaymentCreateModalComponent],
-      providers: [provideZonelessChangeDetection()] // 👈 clave para zoneless
+      providers: [provideZonelessChangeDetection()] 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaymentCreateModalComponent);
@@ -51,7 +51,9 @@ describe('PaymentCreateModalComponent', () => {
   it('debería emitir "create" con datos normalizados cuando el formulario es válido', () => {
     spyOn(component.create, 'emit');
 
-    const today = '2025-09-29';
+    const future = new Date();
+    future.setDate(future.getDate() + 1);
+    const today = future.toISOString().split('T')[0];
 
     component.form.patchValue({
       descripcion: 'Pago de prueba',
