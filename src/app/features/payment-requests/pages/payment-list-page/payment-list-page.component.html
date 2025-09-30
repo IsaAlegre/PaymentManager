@@ -14,50 +14,44 @@
         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors duration-300 w-40">
         Crear Solicitud
       </button>
-
+      @if (isCreateModalOpen()) {
       <app-payment-create-modal
-        *ngIf="isCreateModalOpen()"
         (close)="onCloseCreate()"
         (create)="onCreatePayment($event)">
       </app-payment-create-modal>
+      }
     </div>
   </header>
 
-
-   <app-payment-loader *ngIf="isLoading()"></app-payment-loader>
-
-    <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-6">
-      <p class="text-red-700">{{ errorMessage }}</p>
+    @if (isLoading()) {
+   <app-payment-loader></app-payment-loader>
+    } @else if (error()) {
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+      <p class="text-red-700">{{ error() }}</p>
     </div>
-
-    <div *ngIf="errorMessage" class="errorMessage">
-      {{ errorMessage }}
-    </div>
-
+  } @else {
       <!-- Lista de pagos -->
     <app-payment-list
-      *ngIf="!isLoading() && !error()"
       [payments]="pagos()"
       (paymentDetail)="onPaymentDetail($event)">
     </app-payment-list>
-
-    <app-payment-detail-modal
-      *ngIf="selectedPayment()"
-      [payment]="selectedPayment()"
-      (closed)="onCloseDetail()">
-    </app-payment-detail-modal>
-
-   <!-- Mensaje cuando no hay pagos  -->
-    <div *ngIf="!isLoading() && !error() && pagos().length === 0"  
-          class="flex items-center justify-center h-96 text-gray-500">
-      <p>No se encontraron resultados</p>
-    </div>
-
-      <app-pagination
+    @if (pagos().length === 0) {
+      <div class="flex items-center justify-center h-96 text-gray-500">
+        <p>No se encontraron resultados</p>
+      </div>
+    }
+    <app-pagination
         [currentPage]="currentPage()"
         [totalItems]="totalElements()" 
         [itemsPerPage]="itemsPerPage()"
         (pageChange)="onPageChange($event)">
-      </app-pagination>
+    </app-pagination>
+  }
+  @if (selectedPayment()) {
+    <app-payment-detail-modal
+      [payment]="selectedPayment()"
+      (closed)="onCloseDetail()">
+    </app-payment-detail-modal>
+  }
 </main>
 
