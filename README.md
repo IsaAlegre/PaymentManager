@@ -55,17 +55,12 @@ src/
 
 ## Configuración de entorno
 
-**Es necesario crear el archivo `src/environments/environment.secret.ts`** con el siguiente contenido, donde debes colocar la URL de la API y el token de autenticación:
+El proyecto utiliza los archivos de entorno estándar de Angular:
 
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'https://TU_API_URL',
-  apiToken: 'TU_API_TOKEN',
-};
-```
+- `src/environments/environment.ts` → para desarrollo
+- `src/environments/environment.prod.ts` → para producción
 
-Este archivo es requerido para que la aplicación pueda conectarse correctamente al backend.
+En cada archivo deberás configurar la URL de la API y el token de autenticación:
 
 ## Instalación
 
